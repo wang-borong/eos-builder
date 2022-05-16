@@ -1,5 +1,3 @@
-# This workflow will build an Arch Linux ISO file with the commit on it
-
 name: Build Endeavour ISO
 
 on:
@@ -26,18 +24,17 @@ jobs:
       options: --privileged
     steps:
       - uses: actions/checkout@v2
-      - run: |
-        pacman-key --init
-        pacman --noconfirm -Sy archlinux-keyring
+      - run: pacman-key --init
+      - run: pacman --noconfirm -Sy archlinux-keyring
 
-        pacman --noconfirm -S archiso mkinitcpio-archiso git squashfs-tools --needed
+      - run: pacman --noconfirm -S archiso mkinitcpio-archiso git squashfs-tools --needed
 
-        git clone https://github.com/endeavouros-team/EndeavourOS-ISO
-        cd EndeavourOS-ISO
-        ./prepare.sh
+      - run: git clone https://github.com/endeavouros-team/EndeavourOS-ISO
+      - run: cd EndeavourOS-ISO
+      - run: ./prepare.sh
 
-        ./mkarchiso -v "."
-        echo "ISO_PATH=$PWD/out" >> $GITHUB_ENV
+      - run: ./mkarchiso -v "."
+      - run: echo "ISO_PATH=$PWD/out" >> $GITHUB_ENV
 
       - uses: actions/upload-artifact@v2
         with:
